@@ -14,7 +14,7 @@ const route = require('express').Router();
  * /user:
  *   get:
  *     summary: Get  user  
- *     tags: [User]
+ *     tags: [Users]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -30,7 +30,7 @@ route.get('/user',verifyToken,userController.getUser)
  * /user/all:
  *   get:
  *     summary: Get all users
- *     tags: [User]
+ *     tags: [Users]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -47,7 +47,7 @@ route.get('/user/all', verifyToken, userController.getAllUser);
  * /user/{id}:
  *   delete:
  *     summary: Delete User
- *     tags: [User]
+ *     tags: [Users]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -73,7 +73,7 @@ route.delete("/user/:id", verifyToken, userController.deleteUser);
  * /user:
  *   post:
  *     summary: Create a new User
- *     tags: [User]
+ *     tags: [Users]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -114,7 +114,7 @@ route.post("/user", verifyToken, userController.createUser);
  * /user/{id}:
  *   put:
  *     summary: Update User
- *     tags: [User]
+ *     tags: [Users]
  *     security:
  *       - bearerAuth: []
  *     parameters:
