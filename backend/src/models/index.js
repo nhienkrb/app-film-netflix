@@ -29,7 +29,7 @@ const Subscription = require('./subscription')(sequelize, DataTypes);
 
 // User – Profile (1-n)
 User.hasMany(Profile, { foreignKey: 'user_id' ,as: "profile"});
-Profile.belongsTo(User, { foreignKey: 'user_id' });
+Profile.belongsTo(User, { foreignKey: 'user_id', as: "user" });
 
 // Movie – Genre (n-n)
 Movie.belongsToMany(Genre, { through: MovieGenre, foreignKey: 'movie_id' });
