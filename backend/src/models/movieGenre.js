@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: 'MovieGenre',
       tableName: 'movie_genres',
+      timestamps: false
     }
   );
 
