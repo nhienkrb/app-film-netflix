@@ -36,8 +36,8 @@ Movie.belongsToMany(Genre, { through: MovieGenre, foreignKey: 'movie_id' });
 Genre.belongsToMany(Movie, { through: MovieGenre, foreignKey: 'genre_id' });
 
 // Movie – MediaAsset (1-n)
-Movie.hasMany(MediaAsset, { foreignKey: 'movie_id' });
-MediaAsset.belongsTo(Movie, { foreignKey: 'movie_id' });
+Movie.hasMany(MediaAsset, { foreignKey: 'movie_id' , as: "mediaAsset" });
+MediaAsset.belongsTo(Movie, { foreignKey: 'movie_id',  as: "movie"  });
 
 // Movie – Rating (1-n)
 Movie.hasMany(Rating, { foreignKey: 'movie_id' });
