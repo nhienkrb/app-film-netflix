@@ -7,4 +7,10 @@ const password = joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).require
 const name = joi.string().min(3).max(100).required();
 const maturity_level = joi.string().valid(...Object.values(MaturityLevelEnum)).required();  
   
-module.exports = { email, password,display_name,name,maturity_level };
+const validateFieldViewHistory = joi.object({
+    movieId: joi.number().integer().required(),
+    position_sec: joi.number().integer().required(),
+
+})
+
+module.exports = { email, password,display_name,name,maturity_level,validateFieldViewHistory };

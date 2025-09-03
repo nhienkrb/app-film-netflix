@@ -64,8 +64,8 @@ User.hasMany(ViewHistory, { foreignKey: 'user_id' });
 ViewHistory.belongsTo(User, { foreignKey: 'user_id' });
 
 // Movie – ViewHistory (1-n)
-Movie.hasMany(ViewHistory, { foreignKey: 'movie_id' });
-ViewHistory.belongsTo(Movie, { foreignKey: 'movie_id' });
+Movie.hasMany(ViewHistory, { foreignKey: 'movie_id'  ,as: "viewHistory"});
+ViewHistory.belongsTo(Movie, { foreignKey: 'movie_id' ,as: "movie"});
 
 // Plan – Subscription (1-n)
 Plan.hasMany(Subscription, { foreignKey: 'plan_id' });
