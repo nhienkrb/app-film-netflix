@@ -8,7 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       movie_id: { type: DataTypes.INTEGER, allowNull: false },
       user_id: { type: DataTypes.INTEGER, allowNull: false },
-      stars: { type: DataTypes.TINYINT, allowNull: false },
+      stars: { type: DataTypes.TINYINT, allowNull: true },
+      comment: { type: DataTypes.TEXT, allowNull: true },
     },
     {
       sequelize,
