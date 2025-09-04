@@ -34,6 +34,14 @@ const getOneMovie = async (req, res) => {
   return res.status(200).json({ data: movie, message: "Successfully" });
 };
 
+const getMoviesByName = async (req,res)=>{
+  const name = req.params.name;
+  const movies = await movieService.getOneByName(name);
+  if(!movies || movies.length === 0) return notFound("Movie not found!",res);
+  return res.status(200).json({data:movies, message:"Successfully"});
+}
+
+
 const createMovie = async (req, res) => {
   try {
     const { error } = movieSchema.validate(req.body);
@@ -103,4 +111,5 @@ module.exports = {
   createMovie,
   updateMovie,
   deleteMovie,
+  getMoviesByName
 };
