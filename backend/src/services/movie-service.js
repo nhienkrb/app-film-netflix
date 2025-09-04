@@ -1,6 +1,7 @@
 const db = require("../models");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
+const { Op } = require("sequelize");
 
 const getAll = async () => {
   try {
@@ -27,6 +28,26 @@ const getOneById = async (movieId) => {
       "Error fetching movies at getOneById movie-service.js:",
       error.message
     );
+  }
+};
+
+const getOneByName = async (movieName) => {
+  try {
+    const movies = await db.Movie.findAll({
+      where: {
+        title: db.sequelize.where(
+          db.sequelize.fn("LOWER", db.sequelize.col("title")),
+          { [Op.like]: `${movieName.toLowerCase()}%` }
+        ),
+      },
+    });
+    return movies.length > 0 ? movies : null;
+  } catch (error) {
+    console.error(
+      "Error fetching movies at getOneByName movie-service.js:",
+      error.message
+    );
+    throw error;
   }
 };
 
@@ -107,15 +128,21 @@ const getOneById = async (movieId) => {
 const create = async (movieData) => {
   const t = await db.sequelize.transaction();
   let uploadedFiles = []; // lưu file đã upload Cloudinary
-  let localFiles = [];    // lưu file local để xóa sau khi xong
+  let localFiles = []; // lưu file local để xóa sau khi xong
 
   try {
     // === Upload poster (bắt buộc) ===
-    const posterUpload = await cloudinary.uploader.upload(movieData.poster_url, {
-      folder: "movies/posters",
+    const posterUpload = await cloudinary.uploader.upload(
+      movieData.poster_url,
+      {
+        folder: "movies/posters",
+        resource_type: "image",
+      }
+    );
+    uploadedFiles.push({
+      public_id: posterUpload.public_id,
       resource_type: "image",
     });
-    uploadedFiles.push({ public_id: posterUpload.public_id, resource_type: "image" });
     localFiles.push(movieData.poster_url); // thêm vào danh sách local để xóa
 
     // === Tạo Movie ===
@@ -135,11 +162,17 @@ const create = async (movieData) => {
 
     // === Upload video (nếu có) ===
     if (movieData.movie_url && movieData.type) {
-      const movieUpload = await cloudinary.uploader.upload(movieData.movie_url, {
-        folder: `movies/videos/${movieData.type}`,
+      const movieUpload = await cloudinary.uploader.upload(
+        movieData.movie_url,
+        {
+          folder: `movies/videos/${movieData.type}`,
+          resource_type: "video",
+        }
+      );
+      uploadedFiles.push({
+        public_id: movieUpload.public_id,
         resource_type: "video",
       });
-      uploadedFiles.push({ public_id: movieUpload.public_id, resource_type: "video" });
       localFiles.push(movieData.movie_url);
 
       await db.MediaAsset.create(
@@ -208,7 +241,9 @@ const update = async (movieId, movieData) => {
     if (movieData.poster_url) {
       // Xóa poster cũ nếu có
       if (movie.public_id_poster) {
-        await cloudinary.uploader.destroy(movie.public_id_poster, { resource_type: "image" });
+        await cloudinary.uploader.destroy(movie.public_id_poster, {
+          resource_type: "image",
+        });
       }
 
       // Upload poster mới
@@ -226,37 +261,48 @@ const update = async (movieId, movieData) => {
     if (movieData.movie_url) {
       const mediaAsset = await db.MediaAsset.findOne({
         where: { movie_id: movieId },
-        transaction: t
+        transaction: t,
       });
 
       // Xóa video cũ trên Cloudinary
       if (mediaAsset && mediaAsset.public_id) {
-        await cloudinary.uploader.destroy(mediaAsset.public_id, { resource_type: "video" });
+        await cloudinary.uploader.destroy(mediaAsset.public_id, {
+          resource_type: "video",
+        });
       }
 
       // Upload video mới
       const resultMovie = await cloudinary.uploader.upload(
         movieData.movie_url,
-        { folder: `movies/videos/${movieData.type || mediaAsset?.type}`, resource_type: "video" }
+        {
+          folder: `movies/videos/${movieData.type || mediaAsset?.type}`,
+          resource_type: "video",
+        }
       );
 
       uploadedFiles.push(resultMovie.public_id);
 
       if (mediaAsset) {
-        await mediaAsset.update({
-          url: resultMovie.secure_url,
-          public_id: resultMovie.public_id,
-          type: movieData.type || mediaAsset.type,
-          quality: movieData.quality || mediaAsset.quality,
-        }, { transaction: t });
+        await mediaAsset.update(
+          {
+            url: resultMovie.secure_url,
+            public_id: resultMovie.public_id,
+            type: movieData.type || mediaAsset.type,
+            quality: movieData.quality || mediaAsset.quality,
+          },
+          { transaction: t }
+        );
       } else {
-        await db.MediaAsset.create({
-          movie_id: movie.id,
-          type: movieData.type || "unknown",
-          quality: movieData.quality || "HD",
-          url: resultMovie.secure_url,
-          public_id: resultMovie.public_id,
-        }, { transaction: t });
+        await db.MediaAsset.create(
+          {
+            movie_id: movie.id,
+            type: movieData.type || "unknown",
+            quality: movieData.quality || "HD",
+            url: resultMovie.secure_url,
+            public_id: resultMovie.public_id,
+          },
+          { transaction: t }
+        );
       }
     }
 
@@ -264,12 +310,18 @@ const update = async (movieId, movieData) => {
     if (movieData.genre_id) {
       const movieGenre = await db.MovieGenre.findOne({
         where: { movie_id: movieId },
-        transaction: t
+        transaction: t,
       });
       if (movieGenre) {
-        await movieGenre.update({ genre_id: movieData.genre_id }, { transaction: t });
+        await movieGenre.update(
+          { genre_id: movieData.genre_id },
+          { transaction: t }
+        );
       } else {
-        await db.MovieGenre.create({ movie_id: movie.id, genre_id: movieData.genre_id }, { transaction: t });
+        await db.MovieGenre.create(
+          { movie_id: movie.id, genre_id: movieData.genre_id },
+          { transaction: t }
+        );
       }
     }
 
@@ -301,22 +353,35 @@ const remove = async (movieId) => {
 
     // Xóa poster trên Cloudinary
     if (movie.public_id_poster) {
-      await cloudinary.uploader.destroy(movie.public_id_poster, { resource_type: "image" });
+      await cloudinary.uploader.destroy(movie.public_id_poster, {
+        resource_type: "image",
+      });
     }
 
     // Xóa video assets
-    const mediaAssets = await db.MediaAsset.findAll({ where: { movie_id: movieId }, transaction: t });
+    const mediaAssets = await db.MediaAsset.findAll({
+      where: { movie_id: movieId },
+      transaction: t,
+    });
     for (const asset of mediaAssets) {
       if (asset.public_id) {
-        await cloudinary.uploader.destroy(asset.public_id, { resource_type: "video" });
+        await cloudinary.uploader.destroy(asset.public_id, {
+          resource_type: "video",
+        });
       }
     }
 
     // Xóa record trong MediaAsset
-    await db.MediaAsset.destroy({ where: { movie_id: movieId }, transaction: t });
+    await db.MediaAsset.destroy({
+      where: { movie_id: movieId },
+      transaction: t,
+    });
 
     // Xóa record trong MovieGenre
-    await db.MovieGenre.destroy({ where: { movie_id: movieId }, transaction: t });
+    await db.MovieGenre.destroy({
+      where: { movie_id: movieId },
+      transaction: t,
+    });
 
     // Xóa Movie chính
     await movie.destroy({ transaction: t });
@@ -329,5 +394,4 @@ const remove = async (movieId) => {
   }
 };
 
-
-module.exports = { getAll, getOneById, create,update, remove };
+module.exports = { getAll, getOneById, create, update, remove, getOneByName };

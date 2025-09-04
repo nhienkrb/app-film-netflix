@@ -23,11 +23,11 @@ const options = {
         },
       },
     },
-     security: [
-      {
-        bearerAuth: [],
-      },
-    ],
+    //  security: [
+    //   {
+    //     bearerAuth: [],
+    //   },
+    // ],
   },
   apis: ["./src/routes/*.js"], // chỉ định nơi swagger tìm JSDoc comments
 };

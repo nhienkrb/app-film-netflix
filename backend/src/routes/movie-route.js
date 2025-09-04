@@ -51,6 +51,32 @@ route.get("/", verifyToken, movieController.getAllMovies);
  */
 route.get("/:id", verifyToken, movieController.getOneMovie);
 
+
+/**
+ * @swagger
+ * /movies/search/{name}:
+ *   get:
+ *     summary: Get Movie by name
+ *     tags: [Movies]
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The Movie name
+ *     responses:
+ *       200:
+ *         description: Movie found
+ *       404:
+ *         description: Movie not found
+ *       401:
+ *         description: Unauthorized
+ */
+route.get("/search/:name", movieController.getMoviesByName);
+
+
+
 /**
  * @swagger
  * /movies:
