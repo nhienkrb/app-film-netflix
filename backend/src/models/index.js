@@ -68,12 +68,12 @@ Movie.hasMany(ViewHistory, { foreignKey: 'movie_id'  ,as: "viewHistory"});
 ViewHistory.belongsTo(Movie, { foreignKey: 'movie_id' ,as: "movie"});
 
 // Plan – Subscription (1-n)
-Plan.hasMany(Subscription, { foreignKey: 'plan_id' });
-Subscription.belongsTo(Plan, { foreignKey: 'plan_id' });
+Plan.hasMany(Subscription, { foreignKey: 'plan_id' ,as: "subscriptions" });
+Subscription.belongsTo(Plan, { foreignKey: 'plan_id' , as: "plan" });
 
 // User – Subscription (1-n)
-User.hasMany(Subscription, { foreignKey: 'user_id' });
-Subscription.belongsTo(User, { foreignKey: 'user_id' });
+User.hasMany(Subscription, { foreignKey: 'user_id',as: "subscriptions" });
+Subscription.belongsTo(User, { foreignKey: 'user_id',as:"user" });
 
 // ================= Export =================
 const db = {
