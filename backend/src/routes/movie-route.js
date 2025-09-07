@@ -9,6 +9,20 @@ const upload = require('../middlewares/upload');
  *   name: Movies
  *   description: Movie management APIs
  */
+/**
+ * @swagger
+ * /movies/top10:
+ *   get:
+ *     summary: Get Movie by top10
+ *     tags: [Movies]
+ *     responses:
+ *       200:
+ *         description: Movies found
+ *       401:
+ *         description: Unauthorized
+ */
+route.get("/top10", movieController.getMoviesByTop10);
+
 
 /**
  * @swagger

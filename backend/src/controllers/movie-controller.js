@@ -42,6 +42,11 @@ const getMoviesByName = async (req,res)=>{
 }
 
 
+const getMoviesByTop10 = async (req,res)=>{
+  const movies = await movieService.getTop10ByViews();
+  return res.status(200).json({data:movies, message:"Successfully"});
+}
+
 const createMovie = async (req, res) => {
   try {
     const { error } = movieSchema.validate(req.body);
@@ -111,5 +116,6 @@ module.exports = {
   createMovie,
   updateMovie,
   deleteMovie,
-  getMoviesByName
+  getMoviesByName,
+  getMoviesByTop10
 };
