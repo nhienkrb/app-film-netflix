@@ -51,6 +51,24 @@ const getOneByName = async (movieName) => {
   }
 };
 
+const getTop10ByViews = async ()=>{
+  try {
+      return await db.Movie.findAll({
+    order:[['views','DESC']],
+    limit:10
+  })
+  } catch (error) {
+       console.error(
+      "Error fetching movies at getTop10ByViews movie-service.js:",
+      error.message
+    );
+    throw error;
+  }
+
+}
+
+
+
 // const create = async (movieData) => {
 //   const t = await db.sequelize.transaction();
 //   let uploadedFiles = []; // lưu danh sách file đã upload để rollback nếu lỗi
@@ -394,4 +412,4 @@ const remove = async (movieId) => {
   }
 };
 
-module.exports = { getAll, getOneById, create, update, remove, getOneByName };
+module.exports = { getAll, getOneById, create, update, remove, getOneByName, getTop10ByViews };
