@@ -40,8 +40,8 @@ Movie.hasMany(MediaAsset, { foreignKey: 'movie_id' , as: "mediaAsset" });
 MediaAsset.belongsTo(Movie, { foreignKey: 'movie_id',  as: "movie"  });
 
 // Movie – Rating (1-n)
-Movie.hasMany(Rating, { foreignKey: 'movie_id' });
-Rating.belongsTo(Movie, { foreignKey: 'movie_id' });
+Movie.hasMany(Rating, { foreignKey: 'movie_id' ,as:"ratings"});
+Rating.belongsTo(Movie, { foreignKey: 'movie_id',as:"movie" });
 
 // User – Rating (1-n)
 User.hasMany(Rating, { foreignKey: 'user_id' });

@@ -9,7 +9,7 @@ const isAdmin = async (req, res, next) => {
     return badRequest("User not found", res);
   }
   const user = await userService.getOne(userID);
-  if (user.role !== roles.Roles.VIEWER) {
+  if (user.role !== roles.Roles.ADMIN) {
     return forbiddenRequest("You do not have permission", res);
   }
   next();
