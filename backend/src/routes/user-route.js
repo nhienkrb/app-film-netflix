@@ -23,7 +23,7 @@ const route = require('express').Router();
  *       401:
  *         description: Unauthorized
  */
-route.get('/user',verifyToken,userController.getUser)
+route.get('/user',verifyToken,isAdmin,userController.getUser)
 
 /**
  * @swagger
@@ -39,7 +39,7 @@ route.get('/user',verifyToken,userController.getUser)
  *       401:
  *         description: Unauthorized only admin
  */
-route.get('/user/all', verifyToken, userController.getAllUser);
+route.get('/user/all', verifyToken,isAdmin, userController.getAllUser);
 
 
 /**
@@ -65,7 +65,7 @@ route.get('/user/all', verifyToken, userController.getAllUser);
  *       401:
  *         description: Unauthorized
  */
-route.delete("/user/:id", verifyToken, userController.deleteUser);
+route.delete("/user/:id", verifyToken,isAdmin, userController.deleteUser);
 
 
 /**
@@ -106,7 +106,7 @@ route.delete("/user/:id", verifyToken, userController.deleteUser);
  *       500:
  *         description: Internal server error
  */
-route.post("/user", verifyToken, userController.createUser);
+route.post("/user", verifyToken,isAdmin, userController.createUser);
 
 
 /**
@@ -147,7 +147,7 @@ route.post("/user", verifyToken, userController.createUser);
  *       500:
  *         description: Internal server error
  */
-route.put("/user/:id", verifyToken, userController.updateUser);
+route.put("/user/:id", verifyToken,isAdmin, userController.updateUser);
 
 
 module.exports = route;

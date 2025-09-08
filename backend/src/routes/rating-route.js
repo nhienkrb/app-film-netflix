@@ -1,6 +1,7 @@
 const route = require('express').Router();
 const { createRating, removeRating, getAllByMovieId,updateRating } = require('../controllers/rating-controller');
 const { verifyToken } = require('../middlewares/verify_token');
+const { isAdmin } = require("../middlewares/verify_roles");
 
 /**
  * @swagger
@@ -164,6 +165,6 @@ route.put('/', verifyToken, updateRating);
  *       500:
  *         description: Internal server error
  */
-route.delete('/', verifyToken, removeRating);
+route.delete('/', verifyToken,isAdmin, removeRating);
 
 module.exports = route;

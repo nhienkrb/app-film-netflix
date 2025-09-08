@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const plansController = require("../controllers/plans-controller");
 const { verifyToken } = require("../middlewares/verify_token");
+const { isAdmin } = require("../middlewares/verify_roles");
 
 /**
  * @swagger
@@ -24,7 +25,7 @@ const { verifyToken } = require("../middlewares/verify_token");
  *       401:
  *         description: Unauthorized
  */
-router.get("/", verifyToken, plansController.getAllPlans);
+router.get("/", verifyToken,isAdmin, plansController.getAllPlans);
 
 /**
  * @swagger
@@ -49,7 +50,7 @@ router.get("/", verifyToken, plansController.getAllPlans);
  *       401:
  *         description: Unauthorized
  */
-router.get("/:id", verifyToken, plansController.getPlanById);
+router.get("/:id", verifyToken,isAdmin, plansController.getPlanById);
 
 /**
  * @swagger
@@ -88,7 +89,7 @@ router.get("/:id", verifyToken, plansController.getPlanById);
  *       500:
  *         description: Internal server error
  */
-router.post("/", verifyToken, plansController.createPlan);
+router.post("/", verifyToken,isAdmin, plansController.createPlan);
 
 /**
  * @swagger
@@ -131,7 +132,7 @@ router.post("/", verifyToken, plansController.createPlan);
  *       500:
  *         description: Internal server error
  */
-router.put("/:id", verifyToken, plansController.updatePlan);
+router.put("/:id", verifyToken,isAdmin, plansController.updatePlan);
 
 /**
  * @swagger
@@ -156,6 +157,6 @@ router.put("/:id", verifyToken, plansController.updatePlan);
  *       401:
  *         description: Unauthorized
  */
-router.delete("/:id", verifyToken, plansController.deletePlan);
+router.delete("/:id", verifyToken,isAdmin, plansController.deletePlan);
 
 module.exports = router;

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const subscriptionController = require("../controllers/subscription-controller");
 const { verifyToken } = require("../middlewares/verify_token");
+const { isAdmin } = require("../middlewares/verify_roles");
 
 /**
  * @swagger
@@ -24,7 +25,7 @@ const { verifyToken } = require("../middlewares/verify_token");
  *       401:
  *         description: Unauthorized
  */
-router.get("/", verifyToken, subscriptionController.getAllSubscriptions);
+router.get("/", verifyToken,isAdmin, subscriptionController.getAllSubscriptions);
 
 /**
  * @swagger
@@ -49,7 +50,7 @@ router.get("/", verifyToken, subscriptionController.getAllSubscriptions);
  *       401:
  *         description: Unauthorized
  */
-router.get("/:id", verifyToken, subscriptionController.getSubscriptionById);
+router.get("/:id", verifyToken,isAdmin, subscriptionController.getSubscriptionById);
 
 /**
  * @swagger
@@ -93,7 +94,7 @@ router.get("/:id", verifyToken, subscriptionController.getSubscriptionById);
  *       500:
  *         description: Internal server error
  */
-router.post("/", verifyToken, subscriptionController.createSubscription);
+router.post("/", verifyToken,isAdmin, subscriptionController.createSubscription);
 
 /**
  * @swagger
@@ -134,7 +135,7 @@ router.post("/", verifyToken, subscriptionController.createSubscription);
  *       500:
  *         description: Internal server error
  */
-router.put("/:id", verifyToken, subscriptionController.updateSubscription);
+router.put("/:id", verifyToken,isAdmin, subscriptionController.updateSubscription);
 
 /**
  * @swagger
@@ -159,6 +160,6 @@ router.put("/:id", verifyToken, subscriptionController.updateSubscription);
  *       401:
  *         description: Unauthorized
  */
-router.delete("/:id", verifyToken, subscriptionController.deleteSubscription);
+router.delete("/:id", verifyToken,isAdmin, subscriptionController.deleteSubscription);
 
 module.exports = router;

@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const genreController = require("../controllers/genre-controller");
 const { verifyToken } = require("../middlewares/verify_token");
-
+const { isAdmin } = require("../middlewares/verify_roles");
+ 
 /**
  * @swagger
  * tags:
@@ -16,8 +17,6 @@ const { verifyToken } = require("../middlewares/verify_token");
  *   get:
  *     summary: Get all genres
  *     tags: [Genres]
- *     security:
- *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: List of genres
@@ -49,7 +48,7 @@ router.get("/", verifyToken, genreController.getAllGenre);
  *       401:
  *         description: Unauthorized
  */
-router.get("/:id", verifyToken, genreController.getGenre);
+router.get("/:id", verifyToken,isAdmin, genreController.getGenre);
 
 /**
  * @swagger
@@ -81,7 +80,7 @@ router.get("/:id", verifyToken, genreController.getGenre);
  *       500:
  *         description: Internal server error
  */
-router.post("/", verifyToken, genreController.createGenre);
+router.post("/", verifyToken,isAdmin, genreController.createGenre);
 
 /**
  * @swagger
@@ -118,7 +117,7 @@ router.post("/", verifyToken, genreController.createGenre);
  *       500:
  *         description: Internal server error
  */
-router.put("/:id", verifyToken, genreController.updateGenre);
+router.put("/:id", verifyToken,isAdmin, genreController.updateGenre);
 
 /**
  * @swagger
@@ -143,6 +142,6 @@ router.put("/:id", verifyToken, genreController.updateGenre);
  *       401:
  *         description: Unauthorized
  */
-router.delete("/:id", verifyToken, genreController.deleteGenre);
+router.delete("/:id", verifyToken,isAdmin, genreController.deleteGenre);
 
 module.exports = router;
