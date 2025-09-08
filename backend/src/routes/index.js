@@ -8,6 +8,7 @@ const ratingRoute = require("./rating-route");
 const plansRoute = require("./plans-route");
 const subscription = require("./subscription-route");
 const statistical = require("./statistical-route");
+const favorite = require("./favorite-route");
 
 const { notFoundRoute } = require("../middlewares/handleError");
 
@@ -21,6 +22,7 @@ const initRouter = (app) => {
   app.use("/api/v1/plans", plansRoute);
   app.use("/api/v1/subscriptions", subscription);
   app.use("/api/v1/statistical", statistical);
+  app.use("/api/v1/favorites", favorite);
 
   return app.use(notFoundRoute);
 }; 

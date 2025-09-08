@@ -56,8 +56,11 @@ User.hasMany(Comment, { foreignKey: 'user_id' });
 Comment.belongsTo(User, { foreignKey: 'user_id' });
 
 // User – Favorite – Movie (n-n)
-User.belongsToMany(Movie, { through: Favorite, foreignKey: 'user_id' });
-Movie.belongsToMany(User, { through: Favorite, foreignKey: 'movie_id' });
+User.belongsToMany(Movie, { through: Favorite, foreignKey: 'user_id', otherKey: 'movie_id', as: "favoriteMovies" });
+Movie.belongsToMany(User, { through: Favorite, foreignKey: 'movie_id', otherKey: 'user_id', as: "favoritedByUsers" });
+
+Favorite.belongsTo(Movie, { foreignKey: 'movie_id', as: "movie" });
+Favorite.belongsTo(User, { foreignKey: 'user_id', as: "user" });
 
 // User – ViewHistory (1-n)
 User.hasMany(ViewHistory, { foreignKey: 'user_id' });
