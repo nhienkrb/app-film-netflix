@@ -2,6 +2,7 @@ const route = require('express').Router();
 const { verifyToken } = require('../middlewares/verify_token');
 const movieController = require('../controllers/movie-controller');
 const upload = require('../middlewares/upload');
+const { isAdmin } = require("../middlewares/verify_roles");
 
 /**
  * @swagger
@@ -30,8 +31,6 @@ route.get("/top10", movieController.getMoviesByTop10);
  *   get:
  *     summary: Get all movies
  *     tags: [Movies]
- *     security:
- *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: List of movies
@@ -61,9 +60,9 @@ route.get("/", verifyToken, movieController.getAllMovies);
  *       404:
  *         description: Movie not found
  *       401:
- *         description: Unauthorized
+ *         description: Unauthorized isAdmin
  */
-route.get("/:id", verifyToken, movieController.getOneMovie);
+route.get("/:id", verifyToken,isAdmin, movieController.getOneMovie);
 
 
 /**
@@ -140,7 +139,7 @@ route.get("/search/:name", movieController.getMoviesByName);
  *       500:
  *         description: Internal server error
  */
-route.post("/", verifyToken, upload.fields([
+route.post("/", verifyToken,isAdmin, upload.fields([
     { name: "poster_url", maxCount: 1 },
     { name: "movie_url", maxCount: 1 },
   ]), movieController.createMovie);
@@ -198,7 +197,7 @@ route.post("/", verifyToken, upload.fields([
  *       500:
  *         description: Internal server error
  */
-route.put("/:id", verifyToken, movieController.updateMovie);
+route.put("/:id", verifyToken,isAdmin, movieController.updateMovie);
 
 /**
  * @swagger
@@ -223,6 +222,6 @@ route.put("/:id", verifyToken, movieController.updateMovie);
  *       401:
  *         description: Unauthorized
  */
-route.delete("/:id", verifyToken, movieController.deleteMovie);
+route.delete("/:id", verifyToken,isAdmin, movieController.deleteMovie);
 
 module.exports = route;
