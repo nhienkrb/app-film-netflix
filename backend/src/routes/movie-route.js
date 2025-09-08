@@ -37,7 +37,7 @@ route.get("/top10", movieController.getMoviesByTop10);
  *       401:
  *         description: Unauthorized
  */
-route.get("/", verifyToken, movieController.getAllMovies);
+route.get("/", movieController.getAllMovies);
 
 /**
  * @swagger
