@@ -1,4 +1,4 @@
-const services = require("../services");
+const services = require("../services/auth-service");
 const {
   internalServerError,
   badRequest,

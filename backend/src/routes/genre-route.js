@@ -23,7 +23,7 @@ const { isAdmin } = require("../middlewares/verify_roles");
  *       401:
  *         description: Unauthorized
  */
-router.get("/", verifyToken, genreController.getAllGenre);
+router.get("/", genreController.getAllGenre);
 
 /**
  * @swagger

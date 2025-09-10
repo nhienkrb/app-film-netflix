@@ -1,4 +1,4 @@
-const genreService = require("../services");
+const genreService = require("../services/genre-service");
 const {
   internalServerError,
   badRequest,
