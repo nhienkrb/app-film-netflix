@@ -4,6 +4,26 @@ const movieController = require('../controllers/movie-controller');
 const upload = require('../middlewares/upload');
 const { isAdmin } = require("../middlewares/verify_roles");
 
+
+/**
+ * @swagger
+ * /movies/by-genre:
+ *   get:
+ *     summary: Get movies by genre name
+ *     tags: [Movies]
+ *     parameters:
+ *       - in: query
+ *         name: genre
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Genre name
+ *     responses:
+ *       200:
+ *         description: List of movies by genre
+ */
+route.get("/by-genre", movieController.getMoviesByGenre);
+
 /**
  * @swagger
  * tags:

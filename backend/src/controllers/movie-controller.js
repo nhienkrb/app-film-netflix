@@ -110,6 +110,17 @@ const deleteMovie = async (req, res) => {
   }
 };
 
+const getMoviesByGenre = async (req, res) => {
+  try {
+    const { genre } = req.query;
+    if (!genre) return res.status(400).json({ success: false, message: "Genre is required" });
+
+    const movies = await movieService.getMoviesByGenre(genre);
+    return res.status(200).json({ success: true, data: movies });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
 module.exports = {
   getAllMovies,
   getOneMovie,
@@ -117,5 +128,6 @@ module.exports = {
   updateMovie,
   deleteMovie,
   getMoviesByName,
-  getMoviesByTop10
+  getMoviesByTop10,
+  getMoviesByGenre
 };

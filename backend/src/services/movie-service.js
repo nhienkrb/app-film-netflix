@@ -412,4 +412,25 @@ const remove = async (movieId) => {
   }
 };
 
-module.exports = { getAll, getOneById, create, update, remove, getOneByName, getTop10ByViews };
+const getMoviesByGenre = async (genreName) => {
+  try {
+    const genre = await db.Genre.findOne({ where: { name: genreName } });
+    if (!genre) return [];
+
+    // Lấy các movie thuộc genre này (giả sử có bảng MovieGenre liên kết n-n)
+    const movies = await db.Movie.findAll({
+      include: [{
+        model: db.Genre,
+        as: "genres",
+        where: { id: genre.id },
+        through: { attributes: [] }
+      }]
+    });
+    return movies;
+  } catch (error) {
+    console.error("Error fetching movies by genre:", error.message);
+    throw error;
+  }
+};
+
+module.exports = { getAll, getOneById, create, update, remove, getOneByName, getTop10ByViews, getMoviesByGenre };

@@ -31,9 +31,9 @@ const Subscription = require('./subscription')(sequelize, DataTypes);
 User.hasMany(Profile, { foreignKey: 'user_id' ,as: "profile"});
 Profile.belongsTo(User, { foreignKey: 'user_id', as: "user" });
 
-// Movie – Genre (n-n)
-Movie.belongsToMany(Genre, { through: MovieGenre, foreignKey: 'movie_id' });
-Genre.belongsToMany(Movie, { through: MovieGenre, foreignKey: 'genre_id' });
+// Movie – Genre (n-n),
+Movie.belongsToMany(Genre, { through: MovieGenre, foreignKey: 'movie_id' , as:"genres"});
+Genre.belongsToMany(Movie, { through: MovieGenre, foreignKey: 'genre_id', as:"movies" });
 
 // Movie – MediaAsset (1-n)
 Movie.hasMany(MediaAsset, { foreignKey: 'movie_id' , as: "mediaAsset" });
